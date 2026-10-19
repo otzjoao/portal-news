@@ -1,0 +1,23 @@
+{% extends 'noticias/base.html' %} {% block title %}{{ object.titulo }}{%
+endblock %} {% block meta %}
+<meta name="description" content="{{ object.resumo }}" />
+<meta property="og:title" content="{{ object.titulo }}" />
+<meta property="og:description" content="{{ object.resumo }}" />
+{% if object.imagem %}<meta
+  property="og:image"
+  content="{{ request.scheme }}://{{ request.get_host }}{{ object.imagem.url }}"
+/>{% endif %} {% endblock %} {% block content %}
+<article class="materia">
+  <span class="tag">{{ object.categoria }}</span>
+  <h1>{{ object.titulo }}</h1>
+  <p class="data">
+    Por {{ object.autor.get_full_name|default:object.autor.username }} · {{
+    object.criada_em|date:"d/m/Y H:i" }}
+  </p>
+  {% if object.imagem %}<img
+    src="{{ object.imagem.url }}"
+    alt="{{ object.titulo }}"
+  />{% endif %}
+  <div class="conteudo">{{ object.conteudo }}</div>
+</article>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'noticias/base.html' %}
+
+{% block content %}
+
+{% if destaques and not request.GET.q and not page_obj.has_previous %}
+<section class="destaques">
+  {% for n in destaques %}
+  <a href="{{ n.get_absolute_url }}" class="destaque">
+    {% if n.imagem %}
+      <img src="{{ n.imagem.url }}" alt="{{ n.titulo }}">
+    {% endif %}
+    <div class="texto">
+      <span class="tag">{{ n.categoria }}</span>
+      <h2>{{ n.titulo }}</h2>
+    </div>
+  </a>
+  {% endfor %}
+</section>
+{% endif %}
+
+<section class="grid">
+  {% for n in noticias %}
+  <a href="{{ n.get_absolute_url }}" class="card">
+    {% if n.imagem %}
+      <img src="{{ n.imagem.url }}" alt="{{ n.titulo }}">
+    {% endif %}
+    <div class="corpo">
+      <span class="tag">{{ n.categoria }}</span>
+      <h3>{{ n.titulo }}</h3>
+      <p>{{ n.resumo }}</p>
+      <span class="data">{{ n.criada_em|date:"d/m/Y H:i" }}</span>
+    </div>
+  </a>
+  {% empty %}
+    <p>Nenhuma notícia encontrada.</p>
+  {% endfor %}
+</section>
+
+{% if is_paginated %}
+<div class="paginacao">
+  {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">← Anterior</a>
+  {% endif %}
+  <span>{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Próxima →</a>
+  {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}
