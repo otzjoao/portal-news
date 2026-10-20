@@ -17,13 +17,13 @@ Admin salva notícia (publicada) → Django envia POST ao webhook do n8n → n8n
 
 ## Stack
 
-| Camada | Tecnologia |
-|---|---|
-| Backend | Python 3 + Django |
-| Banco (dev) | SQLite |
-| Frontend | Templates Django + HTML/CSS/JS puro |
-| Automação | n8n (local ou Docker) |
-| Redes | Telegram primeiro; demais em seguida |
+| Camada      | Tecnologia                           |
+| ----------- | ------------------------------------ |
+| Backend     | Python 3 + Django                    |
+| Banco (dev) | SQLite                               |
+| Frontend    | Templates Django + HTML/CSS/JS puro  |
+| Automação   | n8n (local ou Docker)                |
+| Redes       | Telegram primeiro; demais em seguida |
 
 ## Estrutura do projeto
 
@@ -75,7 +75,7 @@ Edite o `secrets.yaml`:
 ```yaml
 django_secret_key: "gere-uma-chave-propria"
 site_url: "http://127.0.0.1:8000"
-n8n_webhook_url: ""        # preencha quando tiver o n8n rodando
+n8n_webhook_url: "" # preencha quando tiver o n8n rodando
 n8n_webhook_token: ""
 ```
 
@@ -152,16 +152,16 @@ legenda:
 imagem: {{ $json.body.imagem }}
 ```
 
-3. Adicione o nó da rede social (comece pelo **Telegram**, ação *Send a text message*, texto `{{ $json.legenda }}`).
+3. Adicione o nó da rede social (comece pelo **Telegram**, ação _Send a text message_, texto `{{ $json.legenda }}`).
 
 ### Testar o webhook
 
 URLs do n8n:
 
-| Modo | URL | Quando usar |
-|---|---|---|
-| Teste | `http://localhost:5678/webhook-test/noticias` | Só funciona enquanto você clica em **Listen for test event** |
-| Produção | `http://localhost:5678/webhook/noticias` | Funciona com o workflow **publicado** (botão Publish) |
+| Modo     | URL                                           | Quando usar                                                  |
+| -------- | --------------------------------------------- | ------------------------------------------------------------ |
+| Teste    | `http://localhost:5678/webhook-test/noticias` | Só funciona enquanto você clica em **Listen for test event** |
+| Produção | `http://localhost:5678/webhook/noticias`      | Funciona com o workflow **publicado** (botão Publish)        |
 
 Teste isolado com `curl` (n8n escutando):
 
@@ -176,16 +176,16 @@ Depois coloque a URL e o token no `secrets.yaml`, **reinicie o `runserver`** (el
 
 ### Payload enviado pelo Django
 
-| Campo | Descrição |
-|---|---|
-| `id` | ID da notícia |
-| `titulo` | Título |
-| `resumo` | Resumo (até 300 caracteres) |
-| `categoria` | Nome da categoria |
-| `autor` | Nome completo ou username |
-| `url` | Link completo da notícia (`site_url` + caminho) |
-| `imagem` | URL completa da imagem ou `null` |
-| `criada_em` | Data/hora em ISO 8601 |
+| Campo       | Descrição                                       |
+| ----------- | ----------------------------------------------- |
+| `id`        | ID da notícia                                   |
+| `titulo`    | Título                                          |
+| `resumo`    | Resumo (até 300 caracteres)                     |
+| `categoria` | Nome da categoria                               |
+| `autor`     | Nome completo ou username                       |
+| `url`       | Link completo da notícia (`site_url` + caminho) |
+| `imagem`    | URL completa da imagem ou `null`                |
+| `criada_em` | Data/hora em ISO 8601                           |
 
 ### Regras do envio
 
@@ -219,15 +219,15 @@ git checkout -b feature/nome-da-tarefa
 
 ## Problemas comuns
 
-| Sintoma | Causa provável |
-|---|---|
-| `TemplateDoesNotExist` | Templates fora de `noticias/templates/noticias/` |
-| `Incorrect timezone setting` | Use um fuso válido, como `America/Sao_Paulo` |
-| `403` ao enviar ao n8n | Token do `secrets.yaml` diferente da credencial do n8n |
-| `404` ao enviar ao n8n | n8n não está escutando (modo teste) ou workflow não publicado (produção) |
-| Notícia criada e nada chegou | Confira `publicada`, `divulgada` e as linhas `[n8n]` no terminal |
-| Mudou o `secrets.yaml` e nada mudou | Reinicie o `runserver` |
-| `'str' object has no attribute 'get'` | `secrets.yaml` fora do formato `chave: "valor"` |
+| Sintoma                               | Causa provável                                                           |
+| ------------------------------------- | ------------------------------------------------------------------------ |
+| `TemplateDoesNotExist`                | Templates fora de `noticias/templates/noticias/`                         |
+| `Incorrect timezone setting`          | Use um fuso válido, como `America/Sao_Paulo`                             |
+| `403` ao enviar ao n8n                | Token do `secrets.yaml` diferente da credencial do n8n                   |
+| `404` ao enviar ao n8n                | n8n não está escutando (modo teste) ou workflow não publicado (produção) |
+| Notícia criada e nada chegou          | Confira `publicada`, `divulgada` e as linhas `[n8n]` no terminal         |
+| Mudou o `secrets.yaml` e nada mudou   | Reinicie o `runserver`                                                   |
+| `'str' object has no attribute 'get'` | `secrets.yaml` fora do formato `chave: "valor"`                          |
 
 ## Roadmap
 
