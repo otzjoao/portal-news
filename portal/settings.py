@@ -1,14 +1,39 @@
+import os
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+import yaml
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
+def _carregar_secrets():
+    caminho = BASE_DIR / 'secrets.yaml'
+    if not caminho.exists():
+        return {}
+    with open(caminho, encoding='utf-8') as f:
+        dados = yaml.safe_load(f)
+    if dados is None:
+        return {}
+    if not isinstance(dados, dict):
+        raise ValueError(
+            'secrets.yaml inválido: use linhas no formato chave: "valor" '
+            '(ex.: django_secret_key: "abc")'
+        )
+    return dados
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@+@kpcvd%vb!c0)o!6ol*%76rec_j=3+!#591og#pki^*=5-q('
+
+_SECRETS = _carregar_secrets()
+
+
+def secret(nome, padrao=''):
+    # variável de ambiente (em maiúsculas) tem prioridade sobre o YAML
+    return os.getenv(nome.upper(), _SECRETS.get(nome, padrao))
+
+
+SECRET_KEY = secret('django_secret_key', 'chave-insegura-so-para-dev')
+SITE_URL = secret('site_url', 'http://127.0.0.1:8000')
+N8N_WEBHOOK_URL = secret('n8n_webhook_url')
+N8N_WEBHOOK_TOKEN = secret('n8n_webhook_token')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -119,8 +144,3 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
-import os
-
-SITE_URL = os.getenv('SITE_URL', 'http://127.0.0.1:8000')
-N8N_WEBHOOK_URL = os.getenv('N8N_WEBHOOK_URL', '')
-N8N_WEBHOOK_TOKEN = os.getenv('N8N_WEBHOOK_TOKEN', '')

@@ -31,6 +31,7 @@ static_root/
 .env.sh
 *.pem
 *.key
+secrets.yaml
 
 # ── Testes e cobertura ──────────────────
 .pytest_cache/
